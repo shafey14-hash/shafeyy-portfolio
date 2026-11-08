@@ -407,139 +407,151 @@
           </div>
 
           <!-- ============ PANEL 4 — PROJECTS ============ -->
-          <div class="h-panel" id="projects" data-panel="projects">
-            <div class="panel-copy">
-              <p class="eyebrow mono reveal-item">// selected work</p>
-              <h2 class="title-xl reveal-item">
-                Things I've <span class="grad">built</span>.
-              </h2>
-
-              <div class="mini-project-list reveal-item">
-                <article class="mini-project">
-                  <div class="project-tags">
-                    <span>AI</span><span>NLP</span><span>Automation</span>
-                  </div>
-                  <h3>Olivia Order Booker</h3>
-                  <p>
-                    AI-powered order booking — tokenizes natural-language input
-                    from a salesperson and extracts customer, product and
-                    delivery details into structured records automatically.
-                  </p>
-                  <div class="project-stack">
-                    Node.js · Express.js · MySQL · OpenAI API
-                  </div>
-                </article>
-                <article class="mini-project">
-                  <div class="project-tags">
-                    <span>Full Stack</span><span>E-commerce</span>
-                  </div>
-                  <h3>SA Parties</h3>
-                  <p>
-                    Scalable full-stack e-commerce platform for party &amp;
-                    special-occasion products — auth, cart, checkout, admin
-                    dashboard and order management.
-                  </p>
-                  <div class="project-stack">
-                    Node.js · Express.js · MySQL · JavaScript
-                  </div>
-                  <a
-                    href="https://sa-parties.vercel.app/"
-                    target="_blank"
-                    rel="noopener"
-                    class="btn btn-ghost small magnetic"
-                    data-cursor-hover
-                  >
-                    Visit Site
-                    <svg
-                      width="13"
-                      height="13"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path d="M7 17 17 7M8 7h9v9" />
-                    </svg>
-                  </a>
-                </article>
-                <article class="mini-project">
-                  <div class="project-tags">
-                    <span>AI</span><span>Computer Vision</span>
-                  </div>
-                  <h3>ASL Detector</h3>
-                  <p>
-                    Real-time American Sign Language recognition via webcam —
-                    detects hand gestures and identifies the corresponding ASL
-                    alphabet to assist communication.
-                  </p>
-                  <div class="project-stack">
-                    Python · OpenCV · Machine Learning
-                  </div>
-                </article>
-                <article class="mini-project">
-                  <div class="project-tags">
-                    <span>Full Stack</span><span>Restaurant</span>
-                  </div>
-                  <h3>Little Chef Pizza</h3>
-                  <p>
-                    A professional restaurant website and management system for
-                    Little Chef Pizza — customer ordering on the front end,
-                    restaurant-side order management on the back end.
-                  </p>
-                  <div class="project-stack">Full Stack Web App</div>
-                  <a
-                    href="https://little-chef-pizza.vercel.app/"
-                    target="_blank"
-                    rel="noopener"
-                    class="btn btn-ghost small magnetic"
-                    data-cursor-hover
-                  >
-                    Visit Site
-                    <svg
-                      width="13"
-                      height="13"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path d="M7 17 17 7M8 7h9v9" />
-                    </svg>
-                  </a>
-                </article>
-                <article class="mini-project">
-                  <div class="project-tags">
-                    <span>Dev Tools</span><span>Python</span>
-                  </div>
-                  <h3>PyTerminal</h3>
-                  <p>
-                    An online Python IDE and terminal that runs entirely in the
-                    browser — write and execute Python code with no local setup
-                    required.
-                  </p>
-                  <div class="project-stack">Browser-based Python IDE</div>
-                  <a
-                    href="https://pyterminal-ide.vercel.app/"
-                    target="_blank"
-                    rel="noopener"
-                    class="btn btn-ghost small magnetic"
-                    data-cursor-hover
-                  >
-                    Visit Site
-                    <svg
-                      width="13"
-                      height="13"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path d="M7 17 17 7M8 7h9v9" />
-                    </svg>
-                  </a>
-                </article>
+          <div class="h-panel h-panel--projects" id="projects" data-panel="projects">
+            <!-- Header stays left; card gallery spans full width below -->
+            <div class="projects-panel-inner">
+              <div class="projects-header reveal-item">
+                <p class="eyebrow mono">// selected work</p>
+                <h2 class="title-xl">
+                  Things I've <span class="grad">built</span>.
+                </h2>
               </div>
-            </div>
+
+              <!-- Horizontal card gallery -->
+              <div class="proj-gallery-wrap">
+                <div class="proj-gallery-track" id="projTrack">
+
+                  <!-- Card 1 — SA-Parties Website -->
+                  <article class="proj-card reveal-item">
+                    <div class="proj-card-inner">
+                      <div class="proj-card-top">
+                        <div class="project-tags">
+                          <span>Full Stack</span><span>E-commerce</span>
+                        </div>
+                        <span class="proj-status proj-status--live">Live</span>
+                      </div>
+                      <h3 class="proj-card-title">SA-Parties Website</h3>
+                      <p class="proj-card-desc">
+                        A fully functional party products and e-commerce website.
+                      </p>
+                      <div class="project-stack">Node.js · Express.js · MySQL · JavaScript</div>
+                      <div class="proj-card-actions">
+                        <a
+                          href="https://sa-parties.vercel.app"
+                          target="_blank"
+                          rel="noopener"
+                          class="btn btn-ghost small magnetic proj-view-btn"
+                          data-cursor-hover
+                        >
+                          View Project
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M8 7h9v9" /></svg>
+                        </a>
+                      </div>
+                    </div>
+                  </article>
+
+                  <!-- Card 2 — Little Chef Pizza -->
+                  <article class="proj-card reveal-item">
+                    <div class="proj-card-inner">
+                      <div class="proj-card-top">
+                        <div class="project-tags">
+                          <span>Full Stack</span><span>Restaurant</span>
+                        </div>
+                        <span class="proj-status proj-status--live">Live</span>
+                      </div>
+                      <h3 class="proj-card-title">Little Chef Pizza</h3>
+                      <p class="proj-card-desc">
+                        A modern restaurant-based website featuring an interactive restaurant experience.
+                      </p>
+                      <div class="project-stack">Full Stack Web App</div>
+                      <div class="proj-card-actions">
+                        <a
+                          href="https://little-chef-pizza.vercel.app"
+                          target="_blank"
+                          rel="noopener"
+                          class="btn btn-ghost small magnetic proj-view-btn"
+                          data-cursor-hover
+                        >
+                          View Project
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M8 7h9v9" /></svg>
+                        </a>
+                      </div>
+                    </div>
+                  </article>
+
+                  <!-- Card 3 — Py Terminal -->
+                  <article class="proj-card reveal-item">
+                    <div class="proj-card-inner">
+                      <div class="proj-card-top">
+                        <div class="project-tags">
+                          <span>Dev Tools</span><span>Python</span>
+                        </div>
+                        <span class="proj-status proj-status--live">Live</span>
+                      </div>
+                      <h3 class="proj-card-title">Py Terminal</h3>
+                      <p class="proj-card-desc">
+                        A web-based Python IDE that allows users to write and execute Python code in an interactive development environment.
+                      </p>
+                      <div class="project-stack">Browser-based Python IDE</div>
+                      <div class="proj-card-actions">
+                        <a
+                          href="https://py-terminal.vercel.app"
+                          target="_blank"
+                          rel="noopener"
+                          class="btn btn-ghost small magnetic proj-view-btn"
+                          data-cursor-hover
+                        >
+                          View Project
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M8 7h9v9" /></svg>
+                        </a>
+                      </div>
+                    </div>
+                  </article>
+
+                  <!-- Card 4 — AI Receptionist Agent (Under Working) -->
+                  <article class="proj-card reveal-item">
+                    <div class="proj-card-inner">
+                      <div class="proj-card-top">
+                        <div class="project-tags">
+                          <span>AI</span><span>Automation</span>
+                        </div>
+                        <span class="proj-status proj-status--wip">Under Working</span>
+                      </div>
+                      <h3 class="proj-card-title">AI Receptionist Agent</h3>
+                      <p class="proj-card-desc">
+                        An AI-powered receptionist agent designed to automate customer interactions and business communication.
+                      </p>
+                      <div class="project-stack">LangChain · OpenAI · Python</div>
+                    </div>
+                  </article>
+
+                  <!-- Card 5 — Real-time ASL Gesture Recognition (Under Working) -->
+                  <article class="proj-card reveal-item">
+                    <div class="proj-card-inner">
+                      <div class="proj-card-top">
+                        <div class="project-tags">
+                          <span>AI</span><span>Computer Vision</span>
+                        </div>
+                        <span class="proj-status proj-status--wip">Under Working</span>
+                      </div>
+                      <h3 class="proj-card-title">Real-time ASL Gesture Recognition</h3>
+                      <p class="proj-card-desc">
+                        An AI-powered real-time American Sign Language gesture recognition system.
+                      </p>
+                      <div class="project-stack">Python · OpenCV · Machine Learning</div>
+                    </div>
+                  </article>
+
+                </div><!-- /.proj-gallery-track -->
+              </div><!-- /.proj-gallery-wrap -->
+
+              <!-- Dot pagination -->
+              <div class="proj-dots" id="projDots" aria-hidden="true">
+                <span class="proj-dot proj-dot--active"></span>
+                <span class="proj-dot"></span>
+                <span class="proj-dot"></span>
+              </div>
+            </div><!-- /.projects-panel-inner -->
           </div>
 
           <!-- ============ PANEL 5 — CONTACT ============ -->

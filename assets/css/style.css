@@ -231,6 +231,15 @@ body.loaded{ opacity:1; transition:opacity .6s var(--ease); }
   font-size:.68rem; letter-spacing:.12em; color:var(--faint);
 }
 
+/* When the projects panel is active, fade out the 3D model so it
+   doesn't overlap the card gallery. The model uses position:fixed
+   so we can't target it via sibling selectors — a body class is used. */
+.panel-projects-active .model-stage{
+  opacity:0 !important;
+  pointer-events:none;
+  transition:opacity .6s var(--ease) !important;
+}
+
 /* ---------------- 3D model stage ---------------- */
 .model-stage{
   position:fixed; top:50%; right:2vw; width:min(46vw,680px); height:min(72vh,680px);
@@ -243,6 +252,7 @@ body.loaded{ opacity:1; transition:opacity .6s var(--ease); }
 
 @media (max-width:900px){
   .h-panel{ flex-direction:column; justify-content:flex-end; padding-bottom:48px; }
+  .h-panel--projects{ flex-direction:column; justify-content:flex-start; padding-bottom:0; }
   .panel-copy{ max-width:100%; max-height:46svh; }
   .model-stage{
     position:absolute; top:6svh; right:0; left:0; width:100%; height:42svh;
@@ -306,7 +316,7 @@ body.loaded{ opacity:1; transition:opacity .6s var(--ease); }
 .journey-compact-item h4{ font-family:var(--font-display); font-size:1.05rem; margin-bottom:6px; }
 .journey-compact-item p{ color:var(--dim); font-size:.88rem; line-height:1.6; }
 
-/* ---------------- projects (compact mini cards) ---------------- */
+/* ---------------- projects — legacy mini list (kept for reduced-motion fallback) ---------------- */
 .mini-project-list{ margin-top:24px; display:flex; flex-direction:column; gap:14px; }
 .mini-project{
   position:relative; padding:22px 24px; border-radius:18px;
@@ -320,6 +330,212 @@ body.loaded{ opacity:1; transition:opacity .6s var(--ease); }
 .mini-project h3{ position:relative; font-family:var(--font-display); font-size:1.1rem; margin-bottom:8px; }
 .mini-project p{ position:relative; color:var(--dim); font-size:.85rem; line-height:1.55; margin-bottom:12px; }
 .project-stack{ position:relative; font-family:var(--font-mono); font-size:.7rem; color:var(--faint); }
+
+/* ============================================================
+   PROJECTS PANEL — full-width horizontal card gallery
+   .h-panel--projects overrides the standard .h-panel layout so
+   the panel occupies the entire viewport width/height and hosts
+   its own inner card-scroll experience.
+============================================================ */
+
+/* The panel itself — full viewport, flex column */
+.h-panel--projects{
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:stretch;
+  padding:0;
+  overflow:hidden;
+}
+
+/* Inner wrapper: header on top, gallery below */
+.projects-panel-inner{
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  height:100%;
+  padding:clamp(60px,8vh,96px) clamp(24px,5vw,80px) 0;
+  gap:0;
+}
+
+/* Section header row */
+.projects-header{
+  flex:0 0 auto;
+  margin-bottom:clamp(24px,3.5vh,40px);
+}
+.projects-header .eyebrow{ margin-bottom:10px; }
+.projects-header .title-xl{ font-size:clamp(2rem,4vw,3.4rem); }
+
+/* Gallery viewport: hides overflow, full remaining height */
+.proj-gallery-wrap{
+  flex:1 1 0;
+  overflow:hidden;
+  min-height:0;
+  position:relative;
+}
+
+/* The sliding track — contains all 5 cards side by side */
+.proj-gallery-track{
+  display:flex;
+  height:100%;
+  /* 3 cards visible on desktop; gap between cards */
+  gap:clamp(14px,1.8vw,24px);
+  will-change:transform;
+  /* padding-bottom so cards don't hug the absolute bottom */
+  padding-bottom:clamp(32px,5vh,56px);
+}
+
+/* ---- Individual project card ---- */
+.proj-card{
+  /* each card is 1/3 of the gallery wrap width minus gaps */
+  flex:0 0 calc((100% - 2 * clamp(14px,1.8vw,24px)) / 3);
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+}
+
+.proj-card-inner{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  height:100%;
+  padding:clamp(20px,2.5vh,32px) clamp(20px,2vw,28px);
+  border-radius:22px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  overflow:hidden;
+  transition:border-color .35s var(--ease), transform .35s var(--ease);
+  cursor:default;
+}
+.proj-card-inner::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  opacity:.45;
+  background:var(--grad-soft);
+  pointer-events:none;
+  border-radius:inherit;
+}
+.proj-card-inner:hover{
+  border-color:var(--border-hi);
+  transform:translateY(-4px);
+}
+
+/* Top row: tags + status badge */
+.proj-card-top{
+  position:relative;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:clamp(12px,1.6vh,18px);
+  flex-wrap:wrap;
+}
+
+/* Status badges */
+.proj-status{
+  flex:0 0 auto;
+  font-family:var(--font-mono);
+  font-size:.6rem;
+  letter-spacing:.08em;
+  padding:5px 12px;
+  border-radius:100px;
+  white-space:nowrap;
+}
+.proj-status--live{
+  color:#6FE7DD;
+  border:1px solid rgba(111,231,221,.35);
+  background:rgba(111,231,221,.06);
+}
+.proj-status--wip{
+  color:#C9A9FF;
+  border:1px solid rgba(155,107,255,.35);
+  background:rgba(155,107,255,.06);
+}
+
+/* Card title */
+.proj-card-title{
+  position:relative;
+  font-family:var(--font-display);
+  font-size:clamp(1rem,1.5vw,1.3rem);
+  font-weight:600;
+  line-height:1.3;
+  margin-bottom:clamp(8px,1vh,12px);
+}
+
+/* Card description */
+.proj-card-desc{
+  position:relative;
+  color:var(--dim);
+  font-size:clamp(.8rem,.95vw,.92rem);
+  line-height:1.65;
+  flex:1 1 auto;
+  margin-bottom:clamp(10px,1.4vh,16px);
+}
+
+/* Stack line — reuses existing .project-stack */
+.proj-card-inner .project-stack{
+  position:relative;
+  font-family:var(--font-mono);
+  font-size:.68rem;
+  color:var(--faint);
+  margin-bottom:0;
+}
+
+/* Actions row */
+.proj-card-actions{
+  position:relative;
+  margin-top:clamp(14px,2vh,20px);
+}
+
+/* Dot pagination — subtle row of dots */
+.proj-dots{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  padding:clamp(10px,1.6vh,18px) 0 clamp(14px,2vh,24px);
+}
+.proj-dot{
+  width:6px; height:6px;
+  border-radius:50%;
+  background:var(--faint);
+  transition:background .35s var(--ease), transform .35s var(--ease);
+}
+.proj-dot--active{
+  background:var(--cyan);
+  transform:scale(1.5);
+}
+
+/* ---- Tablet (2 visible cards) ---- */
+@media (max-width:1100px) and (min-width:601px){
+  .proj-card{
+    flex:0 0 calc((100% - clamp(14px,1.8vw,24px)) / 2);
+  }
+  .proj-dots .proj-dot:last-child{ display:none; }
+}
+
+/* ---- Mobile (1 visible card) ---- */
+@media (max-width:600px){
+  .proj-card{
+    flex:0 0 calc(100% - 8px);
+  }
+  .proj-gallery-track{ gap:12px; }
+  .proj-dots .proj-dot:nth-child(2),
+  .proj-dots .proj-dot:last-child{ display:none; }
+  .projects-panel-inner{
+    padding:clamp(50px,7vh,80px) 20px 0;
+  }
+}
+
+/* ---- Reduced-motion: stack cards vertically ---- */
+.reduced-horizontal .proj-gallery-wrap{ overflow:visible; flex:none; }
+.reduced-horizontal .proj-gallery-track{
+  flex-direction:column; height:auto;
+  transform:none !important;
+  gap:16px; padding-bottom:0;
+}
+.reduced-horizontal .proj-card{ flex:none; width:100%; }
 
 /* ---------------- contact ---------------- */
 .contact-links{ margin-top:20px; display:flex; flex-direction:column; }

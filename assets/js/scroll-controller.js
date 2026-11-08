@@ -9,6 +9,10 @@
      - Only once that panel's content has been fully read (top or
        bottom reached, depending on direction) does scroll switch
        to moving horizontally to the next/previous panel.
+     - For the special "projects" panel, scroll is intercepted to
+       drive the in-panel card gallery instead of the outer panel
+       track — only once all cards are visible does scroll hand off
+       to the outer panel system.
      - No native scrollbar is ever shown — panel text is scrolled
        purely via JS (see .panel-copy's `overflow-y:hidden` in
        style.css), driven entirely by mouse wheel / trackpad /
@@ -21,6 +25,8 @@
        incoming panel's scroll position.
      - `horizontal:progress`    → assets/js/model-scene.js reacts
        by easing the 3D model toward that panel's rotation/position.
+     - `projects:cardchange`    → assets/js/horizontal-scroll.js
+       moves the project card track when on the projects panel.
    horizontal-scroll.js reports back with `horizontal:transitionend`
    once its slide animation finishes, which is what unlocks input
    for the next panel change (prevents skipping multiple panels
@@ -82,6 +88,9 @@
       }),
     );
     dispatchProgress();
+    // Toggle a body class when the projects panel is active so CSS can
+    // fade out the 3D model (which would otherwise overlap the card gallery).
+    document.body.classList.toggle("panel-projects-active", newIndex === projectsPanelIndex);
   }
 
   window.addEventListener("horizontal:transitionend", () => {
@@ -97,6 +106,31 @@
     if (!copy) return;
     scrollTargets[index] = direction === "forward" ? 0 : maxScrollFor(copy);
   });
+
+  // ----------------------------------------------------------------
+  // PROJECTS PANEL — card-gallery intercept
+  // Find the projects panel by data attribute; identify its index.
+  // ----------------------------------------------------------------
+  const projectsPanel = panels.find((p) => p.dataset.panel === "projects");
+  const projectsPanelIndex = projectsPanel ? panels.indexOf(projectsPanel) : -1;
+
+  // State for the project card gallery (managed by horizontal-scroll.js
+  // but decisions about WHEN to advance happen here).
+  // window.__projGallery is set by horizontal-scroll.js once it
+  // initialises the gallery so we can query card count / current position.
+  function getProjGallery() {
+    return window.__projGallery || null;
+  }
+
+  // Returns true when scroll should be captured by the card gallery
+  // rather than the outer panel system.
+  function projectsGalleryShouldCapture(dir) {
+    const g = getProjGallery();
+    if (!g) return false;
+    if (dir > 0) return g.activeCard < g.cardCount - g.visibleCards;
+    if (dir < 0) return g.activeCard > 0;
+    return false;
+  }
 
   // ---------------- TUNE HERE: how "used up" a panel's scroll
   // must be before we hand off to the next one (pixels) ----------------
@@ -114,6 +148,17 @@
   }
 
   function handleDelta(dir, magnitude) {
+    // ---- Projects panel special case: drive card gallery ----
+    if (activeIndex === projectsPanelIndex && projectsPanelIndex >= 0) {
+      if (projectsGalleryShouldCapture(dir)) {
+        window.dispatchEvent(
+          new CustomEvent("projects:cardscroll", { detail: { dir, magnitude } }),
+        );
+        return;
+      }
+      // All cards shown — fall through to outer panel system below
+    }
+
     const copy = copies[activeIndex];
     if (copy) {
       const max = maxScrollFor(copy);
@@ -145,6 +190,29 @@
     else if (dir < 0 && activeIndex > 0)
       requestPanel(activeIndex - 1, "backward");
   }
+
+  // When we arrive at the projects panel going backward (from contact),
+  // reset the card gallery to its last position so reverse scroll works.
+  window.addEventListener("horizontal:panelchange", (e) => {
+    if (e.detail.index === projectsPanelIndex && e.detail.direction === "backward") {
+      const g = getProjGallery();
+      if (g) {
+        window.dispatchEvent(
+          new CustomEvent("projects:cardset", {
+            detail: { cardIndex: g.cardCount - g.visibleCards },
+          }),
+        );
+      }
+    }
+    if (e.detail.index === projectsPanelIndex && e.detail.direction === "forward") {
+      const g = getProjGallery();
+      if (g) {
+        window.dispatchEvent(
+          new CustomEvent("projects:cardset", { detail: { cardIndex: 0 } }),
+        );
+      }
+    }
+  });
 
   /* ---------------- Lock state: only capture scroll while this
      section actually fills the viewport ---------------- */
@@ -190,6 +258,18 @@
       const delta =
         Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
       const dir = delta > 0 ? 1 : -1;
+
+      // On the projects panel, always capture scroll when card gallery
+      // still has room — prevents the event reaching Lenis prematurely.
+      if (activeIndex === projectsPanelIndex && projectsPanelIndex >= 0) {
+        if (projectsGalleryShouldCapture(dir)) {
+          e.preventDefault();
+          e.stopPropagation();
+          handleDelta(dir, Math.max(1, Math.abs(delta)));
+          return;
+        }
+      }
+
       if (!shouldCapture(dir)) return; // let it fall through to Lenis → page scrolls into Hero/Footer
       e.preventDefault();
       e.stopPropagation();
@@ -219,6 +299,16 @@
       }
       if (deltaY === 0) return;
       const dir = deltaY > 0 ? 1 : -1;
+
+      if (activeIndex === projectsPanelIndex && projectsPanelIndex >= 0) {
+        if (projectsGalleryShouldCapture(dir)) {
+          e.preventDefault();
+          e.stopPropagation();
+          handleDelta(dir, deltaY * 1.8);
+          return;
+        }
+      }
+
       if (!shouldCapture(dir)) return;
       e.preventDefault();
       e.stopPropagation();
